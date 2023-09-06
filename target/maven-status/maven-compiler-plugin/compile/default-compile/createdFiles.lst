@@ -1,0 +1,6 @@
+com\productapp\dao\ProductDao.class
+com\productapp\resources\JakartaEE8Resource.class
+com\productapp\entities\Product.class
+com\productapp\services\ProductService.class
+com\productapp\controllers\MyController.class
+com\productapp\JakartaRestConfiguration.class

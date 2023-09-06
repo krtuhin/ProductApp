@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--enable transaction manager-->
+    <tx:annotation-driven/>
+    
+    <!--enable spring annotation-->
+    <context:component-scan base-package="com.productapp"/>
+    
+    <!--view resolver bean-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" name="viewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--data source bean-->
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="dataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1524:orcl2"/>
+        <property name="username" value="scott"/>
+        <property name="password" value="system"/>
+    </bean>
+
+    <!--session factory-->
+    <bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" name="factory">
+        
+        <!--data source-->
+        <property name="dataSource" ref="dataSource"/>
+        
+        <!--hibernate properties-->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle9iDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+        
+        <!--entity classes-->
+        <property name="annotatedClasses">
+            <list>
+                <value>com.productapp.entities.Product</value>
+            </list>
+        </property>
+        
+    </bean>
+    
+    <!--hibernate template bean-->
+    <bean class="org.springframework.orm.hibernate5.HibernateTemplate" name="template">
+        <property name="sessionFactory" ref="factory"/>
+    </bean>
+
+    <!--transaction manager bean-->
+    <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" name="transactionManager">
+        <property name="sessionFactory" ref="factory"/>
+    </bean>
+
+</beans>
